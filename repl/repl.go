@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -54,6 +55,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ctx := context.Background()
+
 	scanner := openFile(p.input)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -61,10 +64,12 @@ func main() {
 			log.Printf("line = %v", line)
 		}
 
-		rows, err := db.Query(line)
+		//rows, err := db.Query(line)  need to free rows, else uses new connection
+		result, err := db.ExecContext(ctx, line)
 		if err != nil {
-			log.Printf("err = %v, rows = %T - %+v", err, rows, rows)
+			log.Printf("err = %v, result = %T - %+v", err, result, result)
 		}
+
 	}
 
 	if err := scanner.Err(); err != nil {
