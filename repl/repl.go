@@ -25,8 +25,8 @@ type parms struct {
 
 func getParms() parms {
 	p := parms{}
-	flag.StringVar(&p.cxstring, "cxstring", "host=localhost port=5432 user=tom dbname=tom sslmode=disable", "dbx connection string")
-	flag.StringVar(&p.input, "input", "in.sql", "file from which to read sql commands")
+	flag.StringVar(&p.cxstring, "cxstring", "host=pgprimary port=5432 user=postgres dbname=replsource sslmode=disable", "dbx connection string")
+	flag.StringVar(&p.input, "input", "-", "file from which to read sql commands, '-' for stdin")
 	flag.BoolVar(&p.verbose, "verbose", false, "print commands prior to sql execution")
 	flag.Parse()
 	return p
@@ -64,12 +64,12 @@ func main() {
 			log.Printf("line = %v", line)
 		}
 
-		//rows, err := db.Query(line)  need to free rows, else uses new connection
+		if false {
+		rows, err := db.Query(line)  need to free rows, else uses new connection
 		result, err := db.ExecContext(ctx, line)
 		if err != nil {
 			log.Printf("err = %v, result = %T - %+v", err, result, result)
 		}
-
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -78,3 +78,6 @@ func main() {
 	}
 
 }
+
+
+type 
